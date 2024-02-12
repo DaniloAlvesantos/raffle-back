@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Rifa {
+  id              String   @id @default(cuid())
+  name            String
+  description     String
+  reward          String
+  numbersQuantity Int
+  price           Float
+  startedAt       DateTime
+  status          String
+  picture         String
+
+  participants      Participant[]
+  purchaseadNumbers PurchasedNumbers[]
+  Choosen           Choosen[]
+}
+
+model Choosen {
+  id            String   @id @default(cuid())
+  participantId String
+  rifaId        String
+  numbersChossed String[] @unique
+  sortedAt      DateTime
+
+  raffle Rifa            @relation(fields: [rifaId], references: [id])
+  winner Participant     @relation(fields: [participantId], references: [id])
+  number PurchasedNumbers @relation(fields: [numbersChossed], references: [numbers])
+
+  @@unique([rifaId, participantId])
+}
+
+model PurchasedNumbers {
+  id            String  @id @default(cuid())
+  rifaId        String
+  participantId String?
+  numbers       String[]  @unique
+
+  Rifa        Rifa         @relation(fields: [rifaId], references: [id])
+  participant Participant? @relation(fields: [participantId], references: [id])
+  Choosen     Choosen[]
+
+  @@unique([participantId])
+}
+
+model Participant {
+  id        String  @id @default(cuid())
+  googleId  String  @unique
+  name      String
+  email     String  @unique
+  phone     String
+  avatarUrl String?
+
+  participatingAt  Rifa[]
+  purchasedNumbers PurchasedNumbers[]
+  Choosen          Choosen[]
+}
