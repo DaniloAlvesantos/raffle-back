@@ -6,7 +6,7 @@
   "scripts": {
     "local:dev": "tsx watch src/server.ts",
     "vercel": "vercel dev",
-    "vercel-build": "npx prisma migrate deply"
+    "vercel-build": "npx prisma migrate deploy"
   },
   "keywords": [],
   "author": "",
