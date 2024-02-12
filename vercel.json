@@ -1,8 +1,12 @@
 {
-    "version": 2,
-    "routes": [
-      { "handle": "src/server.js", "src": "/.*" }
-    ],
-    "builds": [{ "src": "src/server.js", "use": "@now/node-server" }]
-  }
-  
+  "version": 2,
+  "builds": [{ "src": "src/server.js", "use": "@vercel/node" }],
+  "devCommand": "next dev",
+  "framework": "fastify",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api/serverless.js"
+    }
+  ]
+}
