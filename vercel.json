@@ -4,10 +4,11 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/api/serverless.js"
+      "destination": "api/serverless.js"
     }
   ],
   "builds": [
-    { "src": "src/server.ts", "use": "@vercel/node" }
+    { "src": "src/server.ts", "use": "@vercel/node" },
+    { "src": "api/serverless.ts", "use": "@vercel/node" }
   ]
 }
