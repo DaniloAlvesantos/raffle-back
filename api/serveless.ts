@@ -25,7 +25,8 @@ app.register(jwt, {
 app.register(RifaRoutes);
 app.register(NumbersRoutes);
 app.register(AuthRoutes);
-export default async (req: FastifyRequest, res: FastifyReply) => {
+
+export default async function handler(req: FastifyRequest, res: FastifyReply) {
   await app.ready();
   app.server.emit("request", req, res);
-};
+}

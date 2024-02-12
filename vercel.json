@@ -1,7 +1,4 @@
 {
-  "version": 2,
-  "builds": [{ "src": "src/server.js", "use": "@vercel/node" }],
-  "devCommand": "next dev",
   "rewrites": [
     {
       "source": "/(.*)",
