@@ -5,23 +5,26 @@ import { NumbersRoutes } from "./routes/numbers";
 import { AuthRoutes } from "./routes/auth";
 import jwt from "@fastify/jwt";
 
-async function bootStrap() {
-  const fastify = Fastify({
-    logger: true,
+const fastify = Fastify({
+  logger: true,
+});
+
+fastify.register(cors, {
+  origin: true,
+});
+
+fastify.register(RifaRoutes);
+fastify.register(NumbersRoutes);
+fastify.register(AuthRoutes);
+fastify.register(jwt, {
+  secret: "waypremios13121123312",
+});
+
+fastify
+  .listen({
+    host: "0.0.0.0",
+    port: process.env.PORT ? Number(process.env.PORT) : 33333,
+  })
+  .then(() => {
+    console.log("Running Server");
   });
-
-  await fastify.register(cors, {
-    origin: true,
-  });
-
-  fastify.register(RifaRoutes);
-  fastify.register(NumbersRoutes);
-  fastify.register(AuthRoutes);
-
-  await fastify.register(jwt, {
-    secret: "waypremios13121123312",
-  });
-
-}
-
-export default bootStrap;

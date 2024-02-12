@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "18"
+  },
   "scripts": {
-    "local:dev": "tsx watch src/server.ts",
-    "vercel": "vercel dev",
-    "vercel-build": "npx prisma migrate deploy"
+    "dev": "tsx watch src/server.ts",
+    "build": "tsup src",
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +28,6 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@vercel/node": "^3.0.18"
+    "tsup": "^8.0.2"
   }
 }
