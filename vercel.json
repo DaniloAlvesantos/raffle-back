@@ -1,9 +1,14 @@
 {
+  "version": 2,
   "outputDirectory": "build",
   "rewrites": [
     {
       "source": "/(.*)",
       "destination": "/api/serverless.js"
     }
+  ],
+  "builds": [
+    { "src": "dist/**", "use": "@vercel/static" },
+    { "src": "serverless.js", "use": "@vercel/node" }
   ]
 }
