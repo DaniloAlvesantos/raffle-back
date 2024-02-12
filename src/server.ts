@@ -5,7 +5,7 @@ import { NumbersRoutes } from "./routes/numbers";
 import { AuthRoutes } from "./routes/auth";
 import jwt from "@fastify/jwt";
 
-export default async function bootStrap() {
+async function bootStrap() {
   const fastify = Fastify({
     logger: true,
   });
@@ -22,7 +22,6 @@ export default async function bootStrap() {
     secret: "waypremios13121123312",
   });
 
-  await fastify.listen({ port: 33333 });
 }
 
-bootStrap();
+export default bootStrap;
