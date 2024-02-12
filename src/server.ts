@@ -12,7 +12,7 @@ export async function bootStrap() {
   });
 
   await fastify.register(cors, {
-    origin:true,
+    origin:"*",
   })
 
   fastify.register(RifaRoutes)
