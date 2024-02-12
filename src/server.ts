@@ -5,7 +5,7 @@ import { NumbersRoutes } from "./routes/numbers";
 import { AuthRoutes } from "./routes/auth";
 import jwt from "@fastify/jwt"
 
-async function bootStrap() {
+export default async function bootStrap() {
   const fastify = Fastify({
     logger: true,
   });
