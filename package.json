@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "local:dev": "tsx watch src/server.ts",
+    "build": "tsc -p tsconfig.json",
     "vercel": "vercel dev",
     "vercel-build": "npx prisma migrate deploy"
   },

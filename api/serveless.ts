@@ -26,6 +26,12 @@ app.register(RifaRoutes);
 app.register(NumbersRoutes);
 app.register(AuthRoutes);
 
+app.get("/", async (req, reply) => {
+  reply.status(200).send({
+    hello:"word"
+  })
+})
+
 export default async function handler(req: FastifyRequest, res: FastifyReply) {
   await app.ready();
   app.server.emit("request", req, res);
