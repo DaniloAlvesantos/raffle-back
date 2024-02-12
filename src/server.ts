@@ -5,24 +5,28 @@ import { NumbersRoutes } from "./routes/numbers";
 import { AuthRoutes } from "./routes/auth";
 import jwt from "@fastify/jwt"
 
-
 export async function bootStrap() {
   const fastify = Fastify({
     logger: true,
   });
 
-  await fastify.register(cors, {
+  fastify.register(cors, {
     origin:"*",
   })
 
+  fastify.register(AuthRoutes)
   fastify.register(RifaRoutes)
   fastify.register(NumbersRoutes)
-  fastify.register(AuthRoutes)
 
-  await fastify.register(jwt, {
+  fastify.register(jwt, {
     secret: 'waypremios13121123312',
   })
 
+  fastify.listen({
+    port:33333
+  })
 
   return fastify;
 }
+
+bootStrap()
