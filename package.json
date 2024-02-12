@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsup src",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "vercel": "vercel dev"
   },
   "keywords": [],
   "author": "",
@@ -20,7 +21,6 @@
     "@mermaid-js/mermaid-cli": "^9.2.2",
     "@prisma/client": "^4.7.1",
     "fastify": "^4.10.2",
-    "fastify-cron": "^1.3.1",
     "prisma": "^4.7.1",
     "prisma-erd-generator": "^1.2.4",
     "tsx": "^3.12.1",
