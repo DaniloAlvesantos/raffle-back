@@ -15,7 +15,7 @@ const app = Fastify({
 
 // Register your application as a normal plugin.
 app.register(bootStrap, {
-    prefix: "/"
+  prefix: "/",
 });
 
 export default async (req: FastifyRequest, res: FastifyReply) => {
