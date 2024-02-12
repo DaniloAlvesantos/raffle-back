@@ -8,7 +8,6 @@
     }
   ],
   "builds": [
-    { "src": "dist/**", "use": "@vercel/static" },
-    { "src": "serverless.js", "use": "@vercel/node" }
+    { "src": "src/server.ts", "use": "@vercel/node" }
   ]
 }
