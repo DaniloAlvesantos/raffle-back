@@ -22,11 +22,6 @@ export async function bootStrap() {
     secret: 'waypremios13121123312',
   })
 
-  fastify.listen({
-    port:33333
-  })
 
   return fastify;
 }
-
-bootStrap()

@@ -33,5 +33,6 @@ export async function NumbersRoutes(fastify: FastifyInstance) {
     // Adicionar a altenticacao de JWT { onRequest... }
     fastify.post("/buy/numbers", async (req, reply) => {
         console.log(req.body)
+        return req.body
     })
 }
