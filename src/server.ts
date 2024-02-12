@@ -6,6 +6,8 @@ import { AuthRoutes } from "./routes/auth";
 import jwt from "@fastify/jwt"
 
 export default async function bootStrap() {
+  const port = process.env.PORT || 33333  
+
   const fastify = Fastify({
     logger: true,
   });
@@ -23,11 +25,13 @@ export default async function bootStrap() {
   })
 
   try {
-    await fastify.listen({ port: 33333 });
+    await fastify.listen(port);
   } catch(err) {
     console.log(err)
-    await fastify.listen()
+    process.exit(1);
   }
 }
 
 bootStrap();
+
+export { bootStrap }
