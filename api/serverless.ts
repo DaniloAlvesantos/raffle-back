@@ -5,20 +5,11 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 // Require the framework
-import Fastify, { FastifyReply, FastifyRequest } from "fastify";
-import bootStrap from "../src/server";
-
-// Instantiate Fastify with some config
-const app = Fastify({
-  logger: true,
-});
-
-// Register your application as a normal plugin.
-app.register(bootStrap, {
-  prefix: "/",
-});
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { bootStrap } from "../src/server";
 
 export default async (req: FastifyRequest, res: FastifyReply) => {
+  const app:FastifyInstance = await bootStrap();
   await app.ready();
   app.server.emit("request", req, res);
 };

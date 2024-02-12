@@ -8,10 +8,9 @@
   },
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsup src",
-    "vercel-build": "tsup src && npx prisma migrate deploy",
-    "start": "node dist/server.js",
-    "vercel": "vercel dev"
+    "build": "tsc",
+    "start": "node src/server.js",
+    "vercel-build": "npx prisma migrate deploy"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +20,7 @@
     "@fastify/jwt": "^8.0.0",
     "@mermaid-js/mermaid-cli": "^9.2.2",
     "@prisma/client": "^4.7.1",
+    "dotenv": "^16.4.2",
     "fastify": "^4.10.2",
     "prisma": "^4.7.1",
     "prisma-erd-generator": "^1.2.4",
@@ -29,6 +29,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@vercel/node": "^3.0.18",
     "tsup": "^8.0.2"
   }
 }
