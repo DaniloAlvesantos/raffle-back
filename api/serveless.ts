@@ -1,7 +1,7 @@
 "use strict";
 
 import * as dotenv from "dotenv";
-import routes from "../src/server"
+import routes from "../src/server";
 dotenv.config();
 
 // Require the framework
@@ -14,10 +14,10 @@ const app = Fastify({
 
 // Register your application as a normal plugin.
 app.register(routes, {
-  prefix: "/"
+  prefix: "/",
 });
 
 export default async (req: FastifyRequest, res: FastifyReply) => {
-    await app.ready();
-    app.server.emit('request', req, res);
-}
+  await app.ready();
+  app.server.emit("request", req, res);
+};
