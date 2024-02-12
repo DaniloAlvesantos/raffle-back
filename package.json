@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "local:dev": "tsx watch src/server.ts",
-    "vercel": "vercel dev"
+    "vercel": "vercel dev",
+    "vercel-build": "npx prisma migrate deply"
   },
   "keywords": [],
   "author": "",

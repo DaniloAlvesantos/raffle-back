@@ -4,5 +4,17 @@
             "source": "/(.*)",
             "destination": "/api/serverless.js"
         }
+    ],
+    "builds": [
+        {
+            "src": "src/server.ts",
+            "use": "@vercel/node"
+        }
+    ],
+    "route": [
+        {
+            "src": "(.*)",
+            "dest": "src/server.ts"
+        }
     ]
 }
