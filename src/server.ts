@@ -26,6 +26,7 @@ export default async function bootStrap() {
     await fastify.listen({ port: 33333 });
   } catch(err) {
     console.log(err)
+    await fastify.listen()
   }
 }
 
