@@ -1,9 +1,10 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import { RifaRoutes } from "./routes/rifa";
-import { NumbersRoutes } from "./routes/numbers";
 import { AuthRoutes } from "./routes/auth";
-import jwt from "@fastify/jwt"
+import { NumbersRoutes } from "./routes/numbers";
+import { PaymentRoutes } from "./routes/payment";
+import jwt from "@fastify/jwt";
 
 export async function bootStrap() {
   const fastify = Fastify({
@@ -11,17 +12,22 @@ export async function bootStrap() {
   });
 
   fastify.register(cors, {
-    origin:"*",
-  })
+    origin: "*",
+  });
 
-  fastify.register(AuthRoutes)
-  fastify.register(RifaRoutes)
-  fastify.register(NumbersRoutes)
+  fastify.register(AuthRoutes);
+  fastify.register(RifaRoutes);
+  fastify.register(NumbersRoutes);
+  fastify.register(PaymentRoutes);
 
   fastify.register(jwt, {
-    secret: 'waypremios13121123312',
-  })
+    secret: `${process.env.JWT_SECRET}`,
+  });
 
+  fastify.listen({
+    port: 33333,
+  });
 
   return fastify;
 }
+bootStrap();

@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -20,37 +17,32 @@ model Rifa {
   startedAt       DateTime
   status          String
   picture         String
+  winnerId        String?
 
-  participants      Participant[]
   purchaseadNumbers PurchasedNumbers[]
-  Choosen           Choosen[]
+  participants      Participant[]
+  Choosen           Choosen?
 }
 
 model Choosen {
   id            String   @id @default(cuid())
   participantId String
-  rifaId        String
-  numbersChossed String[] @unique
+  raffleId      String   @unique
+  drawnNumber  String   @unique
   sortedAt      DateTime
 
-  raffle Rifa            @relation(fields: [rifaId], references: [id])
-  winner Participant     @relation(fields: [participantId], references: [id])
-  number PurchasedNumbers @relation(fields: [numbersChossed], references: [numbers])
-
-  @@unique([rifaId, participantId])
+  raffle Rifa              @relation(fields: [raffleId], references: [id])
+  winner Participant       @relation(fields: [participantId], references: [id])
 }
 
 model PurchasedNumbers {
-  id            String  @id @default(cuid())
+  id            String   @id @default(cuid())
   rifaId        String
-  participantId String?
-  numbers       String[]  @unique
+  participantId String?  @unique
+  numbers       String[] @unique
 
-  Rifa        Rifa         @relation(fields: [rifaId], references: [id])
   participant Participant? @relation(fields: [participantId], references: [id])
-  Choosen     Choosen[]
-
-  @@unique([participantId])
+  Rifa        Rifa         @relation(fields: [rifaId], references: [id])
 }
 
 model Participant {
@@ -60,8 +52,24 @@ model Participant {
   email     String  @unique
   phone     String
   avatarUrl String?
+  cpf       String  @unique
 
+  winner           Choosen[]
+  Payment          Payment[]
+  purchasedNumbers PurchasedNumbers?
   participatingAt  Rifa[]
-  purchasedNumbers PurchasedNumbers[]
-  Choosen          Choosen[]
+}
+
+model Payment {
+  id                 String   @id @default(cuid())
+  paymentId          String   @unique
+  status             String
+  amount             Float
+  currency           String
+  paymentMethod      String
+  createdAt          DateTime @default(now())
+  participantId      String
+  external_reference String   @unique
+
+  participant Participant @relation(fields: [participantId], references: [id])
 }

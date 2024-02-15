@@ -20,10 +20,13 @@
     "@fastify/jwt": "^8.0.0",
     "@mermaid-js/mermaid-cli": "^9.2.2",
     "@prisma/client": "^4.7.1",
+    "axios": "^1.6.7",
     "dotenv": "^16.4.2",
     "fastify": "^4.10.2",
+    "mercadopago": "^2.0.7",
     "prisma": "^4.7.1",
     "prisma-erd-generator": "^1.2.4",
+    "short-unique-id": "^5.0.3",
     "tsx": "^3.12.1",
     "typescript": "^4.9.4",
     "zod": "^3.22.4"

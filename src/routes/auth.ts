@@ -5,7 +5,13 @@ import { prisma } from "../lib/prisma";
 
 export async function AuthRoutes(fastify: FastifyInstance) {
   fastify.get("/me", { onRequest: [authenticate] }, async (req) => {
-    return { user: req.user };
+    const userInfo = await prisma.participant.findUnique({
+      where: {
+        id: req.user.sub,
+      }
+    })
+    
+    return { userInfo };
   });
 
   fastify.post("/user", async (req, reply) => {
@@ -50,6 +56,7 @@ export async function AuthRoutes(fastify: FastifyInstance) {
           avatarUrl: userInfo.picture,
           email: userInfo.email,
           phone: "0",
+          cpf:""
         },
       });
     }
