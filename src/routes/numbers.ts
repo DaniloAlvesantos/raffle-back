@@ -1,8 +1,16 @@
 import { FastifyInstance } from "fastify";
 import { prisma } from "../lib/prisma";
-import { z } from "zod";
 import { authenticate } from "../plugin/authenticate";
-import { api_mercadopago } from "../lib/axios";
+
+interface RaffleItem {
+  category_id: string;
+  description: string;
+  id: string;
+  picture_url: string | null;
+  quantity: string;
+  title: string;
+  unit_price: string;
+}
 
 export async function NumbersRoutes(fastify: FastifyInstance) {
   fastify.get(
@@ -33,26 +41,4 @@ export async function NumbersRoutes(fastify: FastifyInstance) {
       return reply.send({ ownNumbers }).status(200);
     }
   );
-
-  fastify.post("/numbers/generate", { onRequest: [authenticate] }, async (req, reply) => {
-    const generateBody = z.object({
-      paymentId: z.string()
-    })
-
-    const { paymentId } = generateBody.parse(req.body);
-
-    const paymentResponse = await api_mercadopago.get(`/v1/payments/${paymentId}`)
-    const res = paymentResponse.data;
-
-    // const rifa = await prisma.rifa.findFirst({
-    //   where: {
-    //     id: ,
-    //   }
-    // })
-
-    await Promise.all([
-      paymentResponse,
-    ])
-
-  })
 }

@@ -7,6 +7,7 @@ import { PaymentResponse } from "mercadopago/dist/clients/payment/commonTypes";
 import { MercadoPagoClient } from "../lib/mercadopago";
 import ShortUniqueId from "short-unique-id";
 import { api_mercadopago } from "../lib/axios";
+import { generateNumbers } from "../utils/generateNumbers";
 
 export async function PaymentRoutes(fastify: FastifyInstance) {
   fastify.post("/notification/webhook", async (req, reply) => {
@@ -32,7 +33,7 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
     const { data } = webhookSchema;
 
     const response = await api_mercadopago.get(`/v1/payments/${data.id}`);
-    console.log(response.data)
+    console.log(response.data);
     if (!response.data) {
       return reply.send("Payment not found.").status(400);
     }
@@ -44,13 +45,13 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
 
     let payerIdentification;
 
-    if(paymentInfo.payment_method_id === "pix") {
+    if (paymentInfo.payment_method_id === "pix") {
       payerIdentification = paymentInfo.additional_info.payer.phone.number;
     } else {
-      payerIdentification = paymentInfo.card.cardholder.identification.number 
+      payerIdentification = paymentInfo.card.cardholder.identification.number;
     }
 
-    console.log(payerIdentification)
+    console.log(payerIdentification);
 
     switch (paymentInfo.status) {
       case "approved": {
@@ -86,10 +87,13 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
             status: paymentInfo.status,
             external_reference: paymentInfo.external_reference,
             participantId: user.id,
+            rifaId: paymentInfo.additional_info.items[0].id,
           },
         });
 
-        return { paymentInfo };
+        const numbers = await generateNumbers(data.id);
+
+        return { paymentInfo, numbers: numbers };
       }
       case "failed": {
         return reply.send("Payment Failed.").status(406);
@@ -183,7 +187,7 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
             },
             external_reference: String(code),
             notification_url:
-              "https://927b-138-185-199-213.ngrok-free.app/notification/webhook",
+              "https://71ad-138-185-199-223.ngrok-free.app/notification/webhook",
             statement_descriptor: "Kalov Stocks",
           },
         })
@@ -200,7 +204,7 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
     { onRequest: [authenticate] },
     async (req, reply) => {
       const preferencesBody = z.object({
-        name: z.string(),
+        title: z.string(),
         description: z.string(),
         unit_price: z.number(),
         amount: z.number(),
@@ -219,7 +223,7 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
 
       const rifa = await prisma.rifa.findFirst({
         where: {
-          name: preferencesSchema.name,
+          name: preferencesSchema.title,
         },
       });
 
@@ -237,7 +241,7 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
             items: [
               {
                 id: rifa.id,
-                title: preferencesSchema.name,
+                title: preferencesSchema.title,
                 description: preferencesSchema.description,
                 quantity: preferencesSchema.amount,
                 unit_price: preferencesSchema.unit_price,
@@ -268,7 +272,7 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
               },
             },
             notification_url:
-              "https://927b-138-185-199-213.ngrok-free.app/notification/webhook",
+              "https://71ad-138-185-199-223.ngrok-free.app/notification/webhook",
             external_reference: String(code),
             auto_return: "approved",
             back_urls: {
@@ -300,6 +304,30 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
       }
 
       return reply.send({ payments }).status(200);
+    }
+  );
+
+  fastify.get(
+    "/payments/:id",
+    { onRequest: [authenticate] },
+    async (req, reply) => {
+      const paymentId = z.object({
+        id: z.string(),
+      });
+
+      const { id } = paymentId.parse(req.params);
+
+      const payments = await prisma.payment.findUnique({
+        where: {
+          paymentId: id,
+        },
+      });
+
+      if (!payments) {
+        return reply.send("You don't have any payment.").status(404);
+      }
+
+      return reply.send(payments).status(200);
     }
   );
 }

@@ -11,6 +11,26 @@ export async function RifaRoutes(fastify: FastifyInstance) {
     return rifas;
   });
 
+  fastify.get("/rifas/:name", async (req, reply) => {
+    const rifaParams = z.object({
+      name:z.string()
+    })
+
+    const { name }  = rifaParams.parse(req.params) 
+    
+    const rifa = await prisma.rifa.findFirst({
+      where: {
+        name,
+      }
+    });
+
+    if(!rifa) {
+      return reply.send("Raffle not found.").status(404)
+    }
+
+    return rifa;
+  });
+
   fastify.post("/create/rifa", async (req, reply) => {
     const bodySchema = z.object({
       name: z.string(),
