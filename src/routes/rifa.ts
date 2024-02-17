@@ -6,7 +6,11 @@ import { authenticate } from "../plugin/authenticate";
 
 export async function RifaRoutes(fastify: FastifyInstance) {
   fastify.get("/rifas", async () => {
-    const rifas = await prisma.rifa.findMany();
+    const rifas = await prisma.rifa.findMany({
+      orderBy: {
+        status:"asc"
+      }
+    });
 
     return rifas;
   });
