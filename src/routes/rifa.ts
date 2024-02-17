@@ -15,16 +15,16 @@ export async function RifaRoutes(fastify: FastifyInstance) {
     return rifas;
   });
 
-  fastify.get("/rifas/:name", async (req, reply) => {
+  fastify.get("/rifas/:id", async (req, reply) => {
     const rifaParams = z.object({
-      name:z.string()
+      id:z.string()
     })
 
-    const { name }  = rifaParams.parse(req.params) 
+    const { id }  = rifaParams.parse(req.params) 
     
-    const rifa = await prisma.rifa.findFirst({
+    const rifa = await prisma.rifa.findUnique({
       where: {
-        name,
+        id,
       }
     });
 
