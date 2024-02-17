@@ -43,7 +43,7 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
       return reply.send("Type error.").status(404);
     }
 
-    let payerIdentification = ""
+    let payerIdentification = "";
 
     if (paymentInfo.payment_method_id === "pix") {
       payerIdentification = paymentInfo.additional_info.payer.phone.number;
@@ -58,6 +58,9 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
         const user = await prisma.participant.findFirst({
           where: {
             cpf: payerIdentification,
+          },
+          include: {
+            purchasedNumbers: true,
           },
         });
 
@@ -75,7 +78,7 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
         });
 
         if (paymentCheck) {
-          return reply.send({ paymentCheck }).status(200);
+          return { paymentCheck, numbers: user.purchasedNumbers };
         }
 
         await prisma.payment.create({
@@ -187,7 +190,7 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
             },
             external_reference: String(code),
             notification_url:
-              "https://71ad-138-185-199-223.ngrok-free.app/notification/webhook",
+              "https://way-premios-back-end.vercel.app/notification/webhook",
             statement_descriptor: "Kalov Stocks",
           },
         })
@@ -272,11 +275,11 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
               },
             },
             notification_url:
-              "https://71ad-138-185-199-223.ngrok-free.app/notification/webhook",
+              "https://way-premios-back-end.vercel.app/notification/webhook",
             external_reference: String(code),
             auto_return: "approved",
             back_urls: {
-              success: "https://waypremios.com/",
+              success: "https://kalove-premios.vercel.app",
               pending: "http://localhost:5173/",
               failure: "http://localhost:5173/",
             },
@@ -321,13 +324,29 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
         where: {
           paymentId: id,
         },
+        include: {
+          rifas: true,
+        },
       });
+
+      if (!payments) {
+        return reply.send("Payment not found").status(404);
+      }
+
+      const numbers = await prisma.purchasedNumbers.findMany({
+        where: {
+          rifaId: payments.rifaId,
+          participantId: req.user.sub,
+        },
+      });
+
+      console.log(numbers);
 
       if (!payments) {
         return reply.send("You don't have any payment.").status(404);
       }
 
-      return reply.send(payments).status(200);
+      return reply.send({ payments, numbers: numbers }).status(200);
     }
   );
 }

@@ -2,16 +2,6 @@ import { FastifyInstance } from "fastify";
 import { prisma } from "../lib/prisma";
 import { authenticate } from "../plugin/authenticate";
 
-interface RaffleItem {
-  category_id: string;
-  description: string;
-  id: string;
-  picture_url: string | null;
-  quantity: string;
-  title: string;
-  unit_price: string;
-}
-
 export async function NumbersRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/numbers/user",
@@ -23,7 +13,7 @@ export async function NumbersRoutes(fastify: FastifyInstance) {
         },
         include: {
           Rifa: true,
-        },
+        }
       });
 
       if (!ownNumbers) {
