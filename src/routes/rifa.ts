@@ -21,6 +21,10 @@ export async function RifaRoutes(fastify: FastifyInstance) {
     })
 
     const { id }  = rifaParams.parse(req.params) 
+
+    if(!id) {
+      return reply.send("id invaliable.")
+    }
     
     const rifa = await prisma.rifa.findUnique({
       where: {
