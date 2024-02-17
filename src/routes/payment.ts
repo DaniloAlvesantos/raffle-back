@@ -43,7 +43,7 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
       return reply.send("Type error.").status(404);
     }
 
-    let payerIdentification:string ;
+    let payerIdentification = ""
 
     if (paymentInfo.payment_method_id === "pix") {
       payerIdentification = paymentInfo.additional_info.payer.phone.number;
