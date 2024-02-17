@@ -24,7 +24,5 @@ export async function bootStrap() {
     secret: `${process.env.JWT_SECRET}`,
   });
 
-  
-
   return fastify;
 }
