@@ -24,8 +24,5 @@ export async function bootStrap() {
     secret: `${process.env.JWT_SECRET}`,
   });
 
-  fastify.listen({
-    port:33333
-  })
-  
+
 }
