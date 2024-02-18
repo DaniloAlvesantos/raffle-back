@@ -1,8 +1,9 @@
 {
   "rewrites": [
-      {
-          "source": "/(.*)",
-          "destination": "/api/serverless.ts"
-      }
-  ]
+    {
+      "source": "/(.*)",
+      "destination": "/api/serverless.ts"
+    }
+  ],
+  "regions": ["gru1"]
 }

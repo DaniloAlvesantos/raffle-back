@@ -27,7 +27,5 @@ export async function bootStrap() {
   fastify.listen({
     port:33333
   })
-
-  return fastify;
+  
 }
-bootStrap()
