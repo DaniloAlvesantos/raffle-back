@@ -1,10 +1,8 @@
 "use strict";
-
-// Read the .env file.
+.
 import * as dotenv from "dotenv";
 dotenv.config();
 
-// Require the framework
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { bootStrap } from "../src/server";
 

@@ -32,9 +32,9 @@ export async function AuthRoutes(fastify: FastifyInstance) {
     if (!user) {
       user = await prisma.participant.create({
         data: {
-          name: name,
-          phone: number,
+          name,
           cpf,
+          phone: number
         },
       });
     }

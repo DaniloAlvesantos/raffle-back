@@ -23,6 +23,4 @@ export async function bootStrap() {
   fastify.register(jwt, {
     secret: `${process.env.JWT_SECRET}`,
   });
-
-
 }
