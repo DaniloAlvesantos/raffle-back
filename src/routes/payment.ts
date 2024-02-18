@@ -182,7 +182,7 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
             payer: {
               first_name: payer.name,
               last_name: "user teste",
-              email: payer.email,
+              email: "",
               identification: {
                 type: "CPF",
                 number: payer.cpf,
@@ -268,7 +268,7 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
             payer: {
               name: payer.name,
               surname: "Customer",
-              email: payer.email,
+              email: "",
               identification: {
                 type: "CPF",
                 number: payer.cpf,

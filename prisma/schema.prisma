@@ -21,11 +21,11 @@ model Rifa {
 
   purchaseadNumbers PurchasedNumbers[]
   participants      Participant[]
-  Choosen           Choosen?
+  Choosen           Chosen?
   Payment           Payment[]
 }
 
-model Choosen {
+model Chosen {
   id            String   @id @default(cuid())
   participantId String
   raffleId      String   @unique
@@ -38,8 +38,8 @@ model Choosen {
 
 model PurchasedNumbers {
   id            String   @id @default(cuid())
-  rifaId        String  
-  participantId String?  
+  rifaId        String
+  participantId String?
   numbers       String[] @unique
 
   participant Participant? @relation(fields: [participantId], references: [id])
@@ -47,15 +47,12 @@ model PurchasedNumbers {
 }
 
 model Participant {
-  id        String  @id @default(cuid())
-  googleId  String  @unique
-  name      String
-  email     String  @unique
-  phone     String?
-  avatarUrl String
-  cpf       String  @unique
+  id    String @id @default(cuid())
+  name  String
+  phone String @unique
+  cpf   String @unique
 
-  winner           Choosen[]
+  winner           Chosen[]
   Payment          Payment[]
   purchasedNumbers PurchasedNumbers[]
   participatingAt  Rifa[]

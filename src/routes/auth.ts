@@ -16,47 +16,23 @@ export async function AuthRoutes(fastify: FastifyInstance) {
 
   fastify.post("/create/user", async (req, reply) => {
     const createUserBody = z.object({
-      access_token: z.string(),
+      name: z.string(),
       cpf: z.string(),
       number: z.string(),
     });
 
-    const { access_token, cpf, number } = createUserBody.parse(req.body);
-
-    const userResponse = await fetch(
-      "https://www.googleapis.com/oauth2/v2/userinfo",
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
-
-    const userData = await userResponse.json();
-
-    const userInfoSchema = z.object({
-      id: z.string(),
-      email: z.string().email(),
-      name: z.string(),
-      picture: z.string().url(),
-    });
-
-    const userInfo = userInfoSchema.parse(userData);
+    const { name, cpf, number } = createUserBody.parse(req.body);
 
     let user = await prisma.participant.findUnique({
       where: {
-        googleId: userInfo.id,
+        cpf,
       },
     });
 
     if (!user) {
       user = await prisma.participant.create({
         data: {
-          googleId: userInfo.id,
-          name: userInfo.name,
-          avatarUrl: userInfo.picture,
-          email: userInfo.email,
+          name: name,
           phone: number,
           cpf,
         },
@@ -66,8 +42,8 @@ export async function AuthRoutes(fastify: FastifyInstance) {
     const token = fastify.jwt.sign(
       {
         name: user.name,
-        avatarUrl: user.avatarUrl,
-        email: user.email,
+        cpf: user.cpf,
+        phone: user.phone,
       },
       {
         sub: user.id,
@@ -84,35 +60,15 @@ export async function AuthRoutes(fastify: FastifyInstance) {
 
   fastify.post("/login/user", async (req, reply) => {
     const createUserBody = z.object({
-      access_token: z.string(),
+      cpf: z.string(),
     });
+    console.log(req.params)
 
-    const { access_token } = createUserBody.parse(req.body);
-
-    const userResponse = await fetch(
-      "https://www.googleapis.com/oauth2/v2/userinfo",
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
-
-    const userData = await userResponse.json();
-
-    const userInfoSchema = z.object({
-      id: z.string(),
-      email: z.string().email(),
-      name: z.string(),
-      picture: z.string().url(),
-    });
-
-    const userInfo = userInfoSchema.parse(userData);
+    const { cpf } = createUserBody.parse(req.body)
 
     let user = await prisma.participant.findUnique({
       where: {
-        googleId: userInfo.id,
+        cpf,
       },
     });
 
@@ -123,8 +79,8 @@ export async function AuthRoutes(fastify: FastifyInstance) {
     const token = fastify.jwt.sign(
       {
         name: user.name,
-        avatarUrl: user.avatarUrl,
-        email: user.email,
+        cpf: user.cpf,
+        phone: user.phone,
       },
       {
         sub: user.id,
@@ -136,7 +92,7 @@ export async function AuthRoutes(fastify: FastifyInstance) {
       token,
       user,
     };
-    console.log(token)
+    console.log(token);
     return reply.send(data).status(201);
   });
 }
