@@ -21,13 +21,10 @@ export async function NumbersRoutes(fastify: FastifyInstance) {
         return [];
       }
       if (ownNumbers === null || ownNumbers === undefined) {
-        console.log(ownNumbers);
         reply.send("Error with authentication").status(400);
         return;
       }
-
-      console.log(ownNumbers);
-
+      
       return reply.send({ ownNumbers }).status(200);
     }
   );

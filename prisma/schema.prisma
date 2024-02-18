@@ -51,6 +51,7 @@ model Participant {
   name  String
   phone String @unique
   cpf   String @unique
+  email String @unique
 
   winner           Chosen[]
   Payment          Payment[]

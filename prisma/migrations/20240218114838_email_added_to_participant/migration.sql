@@ -41,6 +41,7 @@ CREATE TABLE "Participant" (
     "name" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
     "cpf" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
 
     CONSTRAINT "Participant_pkey" PRIMARY KEY ("id")
 );
@@ -81,6 +82,9 @@ CREATE UNIQUE INDEX "Participant_phone_key" ON "Participant"("phone");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Participant_cpf_key" ON "Participant"("cpf");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Participant_email_key" ON "Participant"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Payment_paymentId_key" ON "Payment"("paymentId");

@@ -18,10 +18,13 @@ export async function AuthRoutes(fastify: FastifyInstance) {
     const createUserBody = z.object({
       name: z.string(),
       cpf: z.string(),
-      number: z.string(),
+      phone: z.string(),
+      email:z.string()
     });
+    console.log(req.body);
 
-    const { name, cpf, number } = createUserBody.parse(req.body);
+    const { name, cpf, phone, email } = createUserBody.parse(req.body);
+
 
     let user = await prisma.participant.findUnique({
       where: {
@@ -32,9 +35,10 @@ export async function AuthRoutes(fastify: FastifyInstance) {
     if (!user) {
       user = await prisma.participant.create({
         data: {
-          name: name,
-          phone: number,
+          name,
+          phone,
           cpf,
+          email,
         },
       });
     }
@@ -62,13 +66,13 @@ export async function AuthRoutes(fastify: FastifyInstance) {
     const createUserBody = z.object({
       cpf: z.string(),
     });
-    console.log(req.params)
+    console.log(req.params);
 
-    const { cpf } = createUserBody.parse(req.body)
+    const { cpf } = createUserBody.parse(req.body);
 
     let user = await prisma.participant.findUnique({
       where: {
-        cpf,
+        cpf: cpf,
       },
     });
 

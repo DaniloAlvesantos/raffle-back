@@ -181,8 +181,8 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
             },
             payer: {
               first_name: payer.name,
-              last_name: "user teste",
-              email: "",
+              last_name: "Customer",
+              email: payer.email,
               identification: {
                 type: "CPF",
                 number: payer.cpf,
@@ -268,7 +268,7 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
             payer: {
               name: payer.name,
               surname: "Customer",
-              email: "",
+              email: payer.email,
               identification: {
                 type: "CPF",
                 number: payer.cpf,
@@ -279,7 +279,7 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
             external_reference: String(code),
             auto_return: "approved",
             back_urls: {
-              success: "https://kalove-premios.vercel.app",
+              success: "https://kalovepremios.com.br/user",
               pending: "http://localhost:5173/",
               failure: "http://localhost:5173/",
             },
