@@ -9,19 +9,20 @@ CREATE TABLE "Rifa" (
     "startedAt" TIMESTAMP(3) NOT NULL,
     "status" TEXT NOT NULL,
     "picture" TEXT NOT NULL,
+    "winnerId" TEXT,
 
     CONSTRAINT "Rifa_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Choosen" (
+CREATE TABLE "Chosen" (
     "id" TEXT NOT NULL,
     "participantId" TEXT NOT NULL,
-    "rifaId" TEXT NOT NULL,
-    "numbersChossed" TEXT[],
+    "raffleId" TEXT NOT NULL,
+    "drawnNumber" TEXT NOT NULL,
     "sortedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Choosen_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Chosen_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -37,14 +38,27 @@ CREATE TABLE "PurchasedNumbers" (
 -- CreateTable
 CREATE TABLE "Participant" (
     "id" TEXT NOT NULL,
-    "googleId" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
-    "avatarUrl" TEXT,
     "cpf" TEXT NOT NULL,
 
     CONSTRAINT "Participant_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Payment" (
+    "id" TEXT NOT NULL,
+    "paymentId" TEXT NOT NULL,
+    "status" TEXT NOT NULL,
+    "amount" DOUBLE PRECISION NOT NULL,
+    "currency" TEXT NOT NULL,
+    "paymentMethod" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "participantId" TEXT NOT NULL,
+    "external_reference" TEXT NOT NULL,
+    "rifaId" TEXT NOT NULL,
+
+    CONSTRAINT "Payment_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -54,22 +68,25 @@ CREATE TABLE "_ParticipantToRifa" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Choosen_numbersChossed_key" ON "Choosen"("numbersChossed");
+CREATE UNIQUE INDEX "Chosen_raffleId_key" ON "Chosen"("raffleId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Choosen_rifaId_participantId_key" ON "Choosen"("rifaId", "participantId");
+CREATE UNIQUE INDEX "Chosen_drawnNumber_key" ON "Chosen"("drawnNumber");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "PurchasedNumbers_numbers_key" ON "PurchasedNumbers"("numbers");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "PurchasedNumbers_participantId_key" ON "PurchasedNumbers"("participantId");
+CREATE UNIQUE INDEX "Participant_phone_key" ON "Participant"("phone");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Participant_googleId_key" ON "Participant"("googleId");
+CREATE UNIQUE INDEX "Participant_cpf_key" ON "Participant"("cpf");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Participant_email_key" ON "Participant"("email");
+CREATE UNIQUE INDEX "Payment_paymentId_key" ON "Payment"("paymentId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Payment_external_reference_key" ON "Payment"("external_reference");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_ParticipantToRifa_AB_unique" ON "_ParticipantToRifa"("A", "B");
@@ -78,19 +95,22 @@ CREATE UNIQUE INDEX "_ParticipantToRifa_AB_unique" ON "_ParticipantToRifa"("A", 
 CREATE INDEX "_ParticipantToRifa_B_index" ON "_ParticipantToRifa"("B");
 
 -- AddForeignKey
-ALTER TABLE "Choosen" ADD CONSTRAINT "Choosen_rifaId_fkey" FOREIGN KEY ("rifaId") REFERENCES "Rifa"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Chosen" ADD CONSTRAINT "Chosen_raffleId_fkey" FOREIGN KEY ("raffleId") REFERENCES "Rifa"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Choosen" ADD CONSTRAINT "Choosen_participantId_fkey" FOREIGN KEY ("participantId") REFERENCES "Participant"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Chosen" ADD CONSTRAINT "Chosen_participantId_fkey" FOREIGN KEY ("participantId") REFERENCES "Participant"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Choosen" ADD CONSTRAINT "Choosen_numbersChossed_fkey" FOREIGN KEY ("numbersChossed") REFERENCES "PurchasedNumbers"("numbers") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "PurchasedNumbers" ADD CONSTRAINT "PurchasedNumbers_participantId_fkey" FOREIGN KEY ("participantId") REFERENCES "Participant"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PurchasedNumbers" ADD CONSTRAINT "PurchasedNumbers_rifaId_fkey" FOREIGN KEY ("rifaId") REFERENCES "Rifa"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PurchasedNumbers" ADD CONSTRAINT "PurchasedNumbers_participantId_fkey" FOREIGN KEY ("participantId") REFERENCES "Participant"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Payment" ADD CONSTRAINT "Payment_rifaId_fkey" FOREIGN KEY ("rifaId") REFERENCES "Rifa"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Payment" ADD CONSTRAINT "Payment_participantId_fkey" FOREIGN KEY ("participantId") REFERENCES "Participant"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_ParticipantToRifa" ADD CONSTRAINT "_ParticipantToRifa_A_fkey" FOREIGN KEY ("A") REFERENCES "Participant"("id") ON DELETE CASCADE ON UPDATE CASCADE;

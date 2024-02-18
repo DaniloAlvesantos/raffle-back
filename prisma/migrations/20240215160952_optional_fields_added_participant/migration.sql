@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Participant" ALTER COLUMN "phone" DROP NOT NULL,
-ALTER COLUMN "cpf" DROP NOT NULL;
