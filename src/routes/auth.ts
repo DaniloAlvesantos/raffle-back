@@ -48,6 +48,7 @@ export async function AuthRoutes(fastify: FastifyInstance) {
         name: user.name,
         cpf: user.cpf,
         phone: user.phone,
+        email:user.email
       },
       {
         sub: user.id,
@@ -85,6 +86,7 @@ export async function AuthRoutes(fastify: FastifyInstance) {
         name: user.name,
         cpf: user.cpf,
         phone: user.phone,
+        email:user.email
       },
       {
         sub: user.id,

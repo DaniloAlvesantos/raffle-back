@@ -124,10 +124,10 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
         amount: z.number(),
         unit_price: z.number(),
       });
-
+      
       const payer = await prisma.participant.findUnique({
         where: {
-          id: req.user.sub,
+          id: req.user.sub
         },
       });
 
