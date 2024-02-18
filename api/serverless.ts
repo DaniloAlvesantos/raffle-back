@@ -7,7 +7,7 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { bootStrap } from "../src/server";
 
 export default async (req: FastifyRequest, res: FastifyReply) => {
-  const app:FastifyInstance = await bootStrap();
+  const app = await bootStrap();
   await app.ready();
   app.server.emit("request", req, res);
 };
