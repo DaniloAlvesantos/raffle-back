@@ -25,5 +25,4 @@ export async function bootStrap() {
   });
 
   return fastify //Nao apagar
-
 }
