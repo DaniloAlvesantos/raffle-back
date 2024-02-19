@@ -94,11 +94,75 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
           },
         });
 
-        const numbers = await generateNumbers(data.id);
-        console.log(numbers);
-        
+        const payment = await prisma.payment.findUnique({
+          where: {
+            paymentId: data.id,
+          },
+          include: {
+            rifas: true,
+          },
+        });
 
-        return { paymentInfo, numbers: numbers };
+        console.log(payment);
+
+        if (!payment) {
+          return console.log("payment not found");
+        }
+
+        const quantityNumbers = payment.rifas.numbersQuantity;
+        console.log(quantityNumbers);
+        const allNumbers = Array.from({ length: quantityNumbers }, (_, i) => {
+          return (i++).toString();
+        });
+        console.log(allNumbers);
+
+        const purchaseadNumbers = await prisma.purchasedNumbers.findMany({
+          where: {
+            rifaId: payment.rifas.id,
+          },
+        });
+
+        console.log(purchaseadNumbers);
+
+        const boughtNumbers = purchaseadNumbers.flatMap((r) => r.numbers);
+        console.log(boughtNumbers);
+
+        const avalaibleNumbers = allNumbers
+          .filter((number) => !boughtNumbers.includes(number))
+          .sort(() => Math.random() - 0.5);
+
+          console.log(avalaibleNumbers);
+
+        const extractPayment = await api_mercadopago.get(
+          `/v1/payments/${data.id}`
+        );
+
+        console.log(extractPayment);
+
+        const responseNum: PaymentResponse = extractPayment.data;
+        console.log(responseNum);
+
+        const itemsAmount = responseNum.additional_info.items[0].quantity; // Quantity of bought numbers.
+
+        console.log(itemsAmount);
+
+        const randomNumbers = avalaibleNumbers.slice(0, itemsAmount);
+
+        console.log(randomNumbers);
+
+        const generateNumbersResponse = await prisma.purchasedNumbers.create({
+          data: {
+            rifaId: payment.rifas.id,
+            participantId: payment.participantId,
+            numbers: randomNumbers,
+          },
+        });
+
+        console.log(generateNumbers);
+
+        console.log(payment.rifas.numbersQuantity - randomNumbers.length);
+
+        return { paymentInfo, numbers: generateNumbersResponse };
       }
       case "failed": {
         return reply.send("Payment Failed.").status(406);
