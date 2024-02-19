@@ -12,7 +12,7 @@ export const generateNumbers = async (paymentId: string) => {
     },
   });
 
-  console.log(payment);
+  console.log("Pagamento achado",payment);
 
   if (!payment) {
     return console.log("payment not found")
@@ -54,7 +54,6 @@ export const generateNumbers = async (paymentId: string) => {
   });
 
   console.log(generateNumbers);
-  console.log("eppa")
   console.log(payment.rifas.numbersQuantity - randomNumbers.length);
 
   return generateNumbersResponse;

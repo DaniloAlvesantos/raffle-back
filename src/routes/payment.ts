@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { prisma } from "../lib/prisma";
-import { number, z } from "zod";
+import { z } from "zod";
 import { authenticate } from "../plugin/authenticate";
 import { Payment, Preference } from "mercadopago";
 import { PaymentResponse } from "mercadopago/dist/clients/payment/commonTypes";
@@ -33,7 +33,7 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
     const { data } = webhookSchema;
 
     const response = await api_mercadopago.get(`/v1/payments/${data.id}`);
-    console.log(response.data);
+
     if (!response.data) {
       return reply.send("Payment not found.").status(400);
     }
@@ -64,6 +64,8 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
           },
         });
 
+        console.log(user);
+
         if (!user) {
           return reply.status(404).send("CPF not found in participant");
         }
@@ -77,7 +79,10 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
           },
         });
 
+        console.log("Pagamento Check");
+
         if (paymentCheck) {
+          console.log("Pagamento existente");
           return { paymentCheck, numbers: user.purchasedNumbers };
         }
 
@@ -94,75 +99,11 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
           },
         });
 
-        const payment = await prisma.payment.findUnique({
-          where: {
-            paymentId: data.id,
-          },
-          include: {
-            rifas: true,
-          },
-        });
+        console.log("Pagamento criado");
 
-        console.log(payment);
+        const numbers = await generateNumbers(data.id);
 
-        if (!payment) {
-          return console.log("payment not found");
-        }
-
-        const quantityNumbers = payment.rifas.numbersQuantity;
-        console.log(quantityNumbers);
-        const allNumbers = Array.from({ length: quantityNumbers }, (_, i) => {
-          return (i++).toString();
-        });
-        console.log(allNumbers);
-
-        const purchaseadNumbers = await prisma.purchasedNumbers.findMany({
-          where: {
-            rifaId: payment.rifas.id,
-          },
-        });
-
-        console.log(purchaseadNumbers);
-
-        const boughtNumbers = purchaseadNumbers.flatMap((r) => r.numbers);
-        console.log(boughtNumbers);
-
-        const avalaibleNumbers = allNumbers
-          .filter((number) => !boughtNumbers.includes(number))
-          .sort(() => Math.random() - 0.5);
-
-          console.log(avalaibleNumbers);
-
-        const extractPayment = await api_mercadopago.get(
-          `/v1/payments/${data.id}`
-        );
-
-        console.log(extractPayment);
-
-        const responseNum: PaymentResponse = extractPayment.data;
-        console.log(responseNum);
-
-        const itemsAmount = responseNum.additional_info.items[0].quantity; // Quantity of bought numbers.
-
-        console.log(itemsAmount);
-
-        const randomNumbers = avalaibleNumbers.slice(0, itemsAmount);
-
-        console.log(randomNumbers);
-
-        const generateNumbersResponse = await prisma.purchasedNumbers.create({
-          data: {
-            rifaId: payment.rifas.id,
-            participantId: payment.participantId,
-            numbers: randomNumbers,
-          },
-        });
-
-        console.log(generateNumbers);
-
-        console.log(payment.rifas.numbersQuantity - randomNumbers.length);
-
-        return { paymentInfo, numbers: generateNumbersResponse };
+        return { paymentInfo, numbers: numbers };
       }
       case "failed": {
         return reply.send("Payment Failed.").status(406);
