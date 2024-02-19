@@ -96,6 +96,7 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
 
         const numbers = await generateNumbers(data.id);
         console.log(numbers);
+        
 
         return { paymentInfo, numbers: numbers };
       }
@@ -191,7 +192,7 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
             },
             external_reference: String(code),
             notification_url:
-              "https://9bb2-138-185-199-212.ngrok-free.app/notification/webhook",
+              "https://way-premios-back-end.vercel.app/notification/webhook",
             statement_descriptor: "Kalov Stocks",
           },
         })
@@ -276,7 +277,7 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
               },
             },
             notification_url:
-              "https://9bb2-138-185-199-212.ngrok-free.app/notification/webhook",
+              "https://way-premios-back-end.vercel.app/notification/webhook",
             external_reference: String(code),
             auto_return: "approved",
             back_urls: {
