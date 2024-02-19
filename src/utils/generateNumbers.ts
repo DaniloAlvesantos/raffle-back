@@ -13,7 +13,7 @@ export const generateNumbers = async (paymentId: string) => {
   });
 
   if (!payment) {
-    return;
+    return console.log("payment not found")
   }
 
   const quantityNumbers = payment.rifas.numbersQuantity;
@@ -39,8 +39,6 @@ export const generateNumbers = async (paymentId: string) => {
 
   const randomNumbers = avalaibleNumbers.slice(0, itemsAmount);
 
-  console.log(payment.rifaId, payment.rifas.id);
-
   const generateNumbersResponse = await prisma.purchasedNumbers.create({
     data: {
       rifaId: payment.rifas.id,
@@ -48,6 +46,10 @@ export const generateNumbers = async (paymentId: string) => {
       numbers: randomNumbers,
     },
   });
+
+  console.log(generateNumbers);
+
+  console.log(payment.rifas.numbersQuantity - randomNumbers.length);
 
   return generateNumbersResponse;
 };

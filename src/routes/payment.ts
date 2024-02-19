@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { prisma } from "../lib/prisma";
-import { z } from "zod";
+import { number, z } from "zod";
 import { authenticate } from "../plugin/authenticate";
 import { Payment, Preference } from "mercadopago";
 import { PaymentResponse } from "mercadopago/dist/clients/payment/commonTypes";
@@ -95,6 +95,7 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
         });
 
         const numbers = await generateNumbers(data.id);
+        console.log(numbers);
 
         return { paymentInfo, numbers: numbers };
       }
@@ -124,10 +125,10 @@ export async function PaymentRoutes(fastify: FastifyInstance) {
         amount: z.number(),
         unit_price: z.number(),
       });
-      
+
       const payer = await prisma.participant.findUnique({
         where: {
-          id: req.user.sub
+          id: req.user.sub,
         },
       });
 
