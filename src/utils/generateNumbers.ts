@@ -54,7 +54,7 @@ export const generateNumbers = async (paymentId: string) => {
   });
 
   console.log(generateNumbers);
-
+  console.log("eppa")
   console.log(payment.rifas.numbersQuantity - randomNumbers.length);
 
   return generateNumbersResponse;

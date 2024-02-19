@@ -24,11 +24,5 @@ export async function bootStrap() {
     secret: `${process.env.JWT_SECRET}`,
   });
 
-  // return fastify //Nao apagar
-
-  fastify.listen({
-    port:33333
-  })
+  return fastify; //Nao apagar
 }
-
-bootStrap();
